@@ -8,7 +8,7 @@ btnStart.addEventListener('click', startTimer);
 btnStop.addEventListener('click', stopTimer);
 
 function startTimer() {
-   timerId  = setInterval(changeBackgroundColor, 1000);
+   timerId = setInterval(changeBackgroundColor, 1000);
     btnStart.setAttribute('disabled', 'disabled');
     btnStop.removeAttribute('disabled');
 }

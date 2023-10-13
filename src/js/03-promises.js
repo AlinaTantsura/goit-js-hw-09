@@ -28,6 +28,6 @@ function createPromise(position, delay) {
         reject({position: position, delay: delay});
       }
     }, delay);
-  }).then((obj) => Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`))
-  .catch((obj) => Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`))
+  }).then(({position, delay}) => Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`))
+  .catch(({position, delay}) => Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`))
 }

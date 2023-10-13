@@ -1,14 +1,15 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const startBtn = document.querySelector('button[data-start]'); 
+startBtn.setAttribute('disabled', 'disabled');
 const days = document.querySelector('[data-days]');
 const hours = document.querySelector('[data-hours]');
 const minutes = document.querySelector('[data-minutes]');
 const seconds = document.querySelector('[data-seconds]');
 let timerId = null;
 let timeForClear;
-startBtn.setAttribute('disabled', 'disabled');
 let selectDate;
 
 const options = {
@@ -17,9 +18,10 @@ const options = {
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates) {
-        selectDate = selectedDates[0].getTime(); 
-      if(selectDate < new Date().getTime()){
-        alert('Please choose a date in the future');
+      selectDate = selectedDates[0].getTime(); 
+      if (selectDate < options.defaultDate.getTime()) {
+        // alert('Please choose a date in the future');
+        Notify.failure('Please choose a date in the future');
         startBtn.setAttribute('disabled', 'disabled');
       }
       else{
@@ -35,16 +37,15 @@ function startCount(){
     timeForClear = selectDate - dateNow;
     console.log(timeForClear);
     timerId = setInterval(showTime, 1000);
+    startBtn.setAttribute('disabled', 'disabled');
 }
-// clearInterval(timerId, timeForClear)
 function showTime(){
     const leaveTime = selectDate - new Date().getTime();
     const time = convertMs(leaveTime);
-    console.log(time);
-    days.textContent = time.days;
-    hours.textContent = time.hours;
-    minutes.textContent = time.minutes;
-    seconds.textContent = time.seconds;
+    days.textContent = addLeadingZero(time.days.toString());
+    hours.textContent = addLeadingZero(time.hours.toString());
+    minutes.textContent = addLeadingZero(time.minutes.toString());
+    seconds.textContent = addLeadingZero(time.seconds.toString());
     if(leaveTime < 1000){
         clearInterval(timerId);
     }
@@ -65,4 +66,13 @@ function convertMs(ms) {
     const seconds = Math.floor((((ms % day) % hour) % minute) / second);
   
     return { days, hours, minutes, seconds };
+}
+  
+function addLeadingZero(value) {
+  if (value.length < 2) {
+    return value.padStart(2 ,'0');
   }
+  else {
+    return value;
+  }
+}

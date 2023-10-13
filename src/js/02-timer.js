@@ -33,22 +33,23 @@ const options = {
 flatpickr('#datetime-picker', options);
 startBtn.addEventListener('click', startCount);
 function startCount(){
-    const dateNow = new Date();
+    const dateNow = options.defaultDate.getTime();
     timeForClear = selectDate - dateNow;
-    console.log(timeForClear);
     timerId = setInterval(showTime, 1000);
     startBtn.setAttribute('disabled', 'disabled');
 }
 function showTime(){
-    const leaveTime = selectDate - new Date().getTime();
+    const leaveTime = selectDate - new Date();
+    if(leaveTime < 0){
+      clearInterval(timerId);
+      return;
+    }
     const time = convertMs(leaveTime);
     days.textContent = addLeadingZero(time.days.toString());
     hours.textContent = addLeadingZero(time.hours.toString());
     minutes.textContent = addLeadingZero(time.minutes.toString());
     seconds.textContent = addLeadingZero(time.seconds.toString());
-    if(leaveTime < 1000){
-        clearInterval(timerId);
-    }
+    
 }
 
 function convertMs(ms) {
